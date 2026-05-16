@@ -1,0 +1,15 @@
+node_modules/
+.turbo/
+dist/
+.next/
+registry/
+*.tsbuildinfo
+.DS_Store
+
+# Claude Code runtime (local, machine-specific)
+.claude/
+.claude.json
+
+# Anthropic API keys if you ever check one in by accident
+.env
+.env.local
