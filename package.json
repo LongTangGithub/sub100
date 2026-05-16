@@ -1,0 +1,24 @@
+{
+  "name": "sub100",
+  "packageManager": "pnpm@11.1.2",
+  "type": "module",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp",
+      "@next/swc-darwin-arm64"
+    ]
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "format": "biome format --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.15",
+    "@changesets/cli": "^2.31.0",
+    "@types/node": "^20.19.41",
+    "turbo": "^2.9.14"
+  }
+}
