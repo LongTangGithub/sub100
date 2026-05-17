@@ -27,6 +27,9 @@ Each rule should be:
 
 ## Workflow
 
+- (2026-05-17) Rule: When discovering an unrelated bug in a file you're touching, fix it in the same PR with explicit callout in the description under a "Bug fix bundled" or similar header. Spinning up a separate issue for a 2-character fix is process for process's sake. CLAUDE.md §5's "Surgical Changes" rule prevents opportunistic refactoring, not bundling related fixes.
+  Why: SUB-9 fixed the cubic-bezier malformation in springs.ts while in the same file for motion gating. Bundling it kept the trail tight and the bug from lingering. The PR description documented the bundle so it wasn't slipped in silently.
+
 - (2026-05-17) Rule: When a PR description omits acceptance criteria from the original issue, flag the gap explicitly before merging. Don't assume "not mentioned" means "done".
   Why: SUB-2 merged without verifying `prefers-reduced-motion`, `focus-visible`, or registry script wiring because the PR description didn't mention them. Three acceptance criteria gaps became carry-forward work (SUB-9) that should have been caught at PR review.
 
