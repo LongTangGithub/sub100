@@ -17,7 +17,10 @@ interface UsePressResult {
   };
 }
 
-export function usePress({ onPress, disabled }: UsePressOptions): UsePressResult {
+export function usePress({
+  onPress,
+  disabled,
+}: UsePressOptions): UsePressResult {
   const [isPressed, setIsPressed] = useState(false);
   const isPressedRef = useRef(false);
 
@@ -35,7 +38,7 @@ export function usePress({ onPress, disabled }: UsePressOptions): UsePressResult
       e.currentTarget?.setPointerCapture?.(e.pointerId);
       onPress?.();
     },
-    [disabled, onPress]
+    [disabled, onPress],
   );
 
   const onPointerUp = useCallback(
@@ -43,7 +46,7 @@ export function usePress({ onPress, disabled }: UsePressOptions): UsePressResult
       e.currentTarget?.releasePointerCapture?.(e.pointerId);
       cancel();
     },
-    [cancel]
+    [cancel],
   );
 
   const onKeyDown = useCallback(
@@ -56,7 +59,7 @@ export function usePress({ onPress, disabled }: UsePressOptions): UsePressResult
         onPress?.();
       }
     },
-    [disabled, onPress]
+    [disabled, onPress],
   );
 
   const onKeyUp = useCallback((e: React.KeyboardEvent) => {

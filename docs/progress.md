@@ -49,6 +49,10 @@ Work currently underway. One entry per concrete unit of work (feature, file, mig
 
 Most recent at the top. Trim aggressively — anything older than the current milestone can be archived to `progress-archive.md` or deleted.
 
+### 2026-05-17
+
+- **SUB-9 — prefers-reduced-motion + focus-visible polish** — complete. `useMotion` rewritten with `useSyncExternalStore` (no hydration flash). Focus ring consolidated to single `--color-ring` token. `springs.ts` cubic-bezier bug fixed. 19 tests green (4 new for `useMotion`, 1 new focus-visible class check). Preview updated with Focus ring + Reduced motion sections. Typecheck + build green.
+
 ### 2026-05-16
 
 - **SUB-2 — Button + useOptimisticAction + usePress** — complete. `usePress` (pointerdown, cancel, leave, keyboard), `useOptimisticAction` (optimistic state, error callback), `Button` (4 variants, 3 sizes, disabled, press scale, springs wired). 14 tests green. Preview at `/preview/button`.
@@ -104,6 +108,20 @@ Significant technical or product decisions made during the project. Append-only 
 - **Decision:** Core `packages/ui` stays domain-agnostic. AI components live in `packages/ai` (`@sub100/ai`), opt-in.
 - **Alternatives considered:** (a) Ship AI primitives as headline in core. (b) Stay framework-agnostic, treat AI as just an example.
 - **Consequences:** Registry endpoint must be namespaced (`/r/ui/[name]`, `/r/ai/[name]`). Two packages need independent versioning (Changesets becomes load-bearing). Marketing positions AI as the *proof point* for the sub-100 thesis, not the product itself.
+
+### 2026-05-17 — useSyncExternalStore for useMotion over useState/useEffect
+
+- **Context:** Original `useMotion` used `useState(false)` + `useEffect` to read `matchMedia`. Causes hydration mismatch — server renders with `false`, client may immediately correct if user has reduced motion enabled.
+- **Decision:** Rewrite with `useSyncExternalStore`. `getServerSnapshot` returns `false`; `getSnapshot` reads live `matchMedia`. No flash, no mismatch.
+- **Alternatives considered:** `useState` + `useEffect` (original, ships a flash). `useLayoutEffect` (suppresses SSR warning but doesn't fix the mismatch).
+- **Consequences:** Requires React 18+. Eliminates hydration warning in Next.js. Pattern reusable for any `matchMedia`-based hook.
+
+### 2026-05-17 — Single focus ring token over per-variant colors
+
+- **Context:** SUB-2 button variants each had their own focus ring color. Inconsistent across variants, harder to theme.
+- **Decision:** Single `--color-ring` token (`oklch` blue-500) applied via `focus-visible:ring-ring` in button base class. All variants share one canonical ring.
+- **Alternatives considered:** Per-variant rings (more control, more drift risk). No ring (accessibility regression).
+- **Consequences:** One token to override for theming. Consistent keyboard navigation UX across all button variants.
 
 ### 2026-05-16 — React 19 primitives only for state inside the library
 

@@ -1,8 +1,8 @@
 {
-    "name": "@sub100/ai",
-    "version": "0.0.0",
-    "type": "module",
-    "exports": {
-        ".": "./src/index.ts"
-    }
+  "name": "@sub100/ai",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  }
 }

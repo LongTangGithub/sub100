@@ -1,30 +1,32 @@
 {
-    "name": "@sub100/ui",
-    "version": "0.0.0",
-    "type": "module",
-    "exports": {
-        ".": "./src/index.ts",
-        "./components/button": "./src/components/button.tsx",
-        "./hooks/use-optimistic-action": "./src/hooks/use-optimistic-action.ts"
-    },
-    "scripts": {
-        "test": "vitest run",
-        "test:watch": "vitest"
-    },
-    "devDependencies": {
-        "@testing-library/jest-dom": "^6.9.1",
-        "@testing-library/react": "^16.3.2",
-        "@testing-library/user-event": "^14.6.1",
-        "@types/react": "^19.2.14",
-        "@types/react-dom": "^19.2.3",
-        "@vitejs/plugin-react": "^6.0.2",
-        "jsdom": "^29.1.1",
-        "react": "^19.2.4",
-        "react-dom": "^19.2.4",
-        "vitest": "^4.1.6"
-    },
-    "dependencies": {
-        "tailwind-merge": "^3.6.0",
-        "tailwind-variants": "^3.2.2"
-    }
+  "name": "@sub100/ui",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./components/button": "./src/components/button.tsx",
+    "./hooks/use-optimistic-action": "./src/hooks/use-optimistic-action.ts",
+    "./hooks/use-motion": "./src/hooks/use-motion.ts",
+    "./lib/springs": "./src/lib/springs.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "jsdom": "^29.1.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "vitest": "^4.1.6"
+  },
+  "dependencies": {
+    "tailwind-merge": "^3.6.0",
+    "tailwind-variants": "^3.2.2"
+  }
 }
