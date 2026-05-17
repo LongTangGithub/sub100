@@ -1,10 +1,12 @@
 @theme {
---font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
---font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
---ease-snappy: cubic-bezier(0.2, 0, 0, 1);
---ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
 
---duration-press: 120ms;
---duration-reveal: 180ms;
+  --duration-press: 120ms;
+  --duration-reveal: 180ms;
+
+  --color-ring: oklch(0.623 0.214 259.9); /* blue-500 */
 }

@@ -32,7 +32,9 @@ describe("useOptimisticAction", () => {
 
   it("calls onError and clears pending on failure", async () => {
     const onError = vi.fn();
-    const action = vi.fn((): Promise<void> => Promise.reject(new Error("fail")));
+    const action = vi.fn(
+      (): Promise<void> => Promise.reject(new Error("fail")),
+    );
     const { result } = renderHook(() =>
       useOptimisticAction({ action, optimisticData: "loading", onError }),
     );
