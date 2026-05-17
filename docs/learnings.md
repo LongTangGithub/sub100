@@ -27,11 +27,16 @@ Each rule should be:
 
 ## Workflow
 
-- *(no rules yet — first correction lands here)*
+- (2026-05-17) Rule: When a PR description omits acceptance criteria from the original issue, flag the gap explicitly before merging. Don't assume "not mentioned" means "done".
+  Why: SUB-2 merged without verifying `prefers-reduced-motion`, `focus-visible`, or registry script wiring because the PR description didn't mention them. Three acceptance criteria gaps became carry-forward work (SUB-9) that should have been caught at PR review.
 
 ## Code
 
-- *(no rules yet)*
+- (2026-05-17) Rule: When a React 19 concurrent primitive (`useOptimistic`, `useTransition`) fails in jsdom tests, fix the test setup before abandoning the primitive. Migrate the affected test to Playwright if needed.
+  Why: SUB-2's `useOptimisticAction` swapped `useOptimistic` for `useState` because jsdom `act()` couldn't handle concurrent semantics. UX is fine, but consumers lose React's automatic Server Action rollback. Test-setup limitations should not silently downgrade library architecture.
+
+- (2026-05-17) Rule: Project conventions in CLAUDE.md §10 are non-violable defaults. Every component implementation must explicitly verify each applicable rule before the PR is opened — not after.
+  Why: `prefers-reduced-motion` is listed in §10 with "push back if asked to violate" but wasn't checked during SUB-2. Button shipped without it.
 
 ## Testing
 
