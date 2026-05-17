@@ -29,9 +29,9 @@ When finishing:
 
 ## Current Focus
 
-**SUB-2 — Button + `useOptimisticAction` + `usePress`.** First real component. Load-bearing pattern every other component inherits.
+**SUB-3 — Kbd component.** Tiny, identity-defining.
 
-Project plan: [v0.1 Soft Launch Plan](https://www.notion.so/36259290728581dd8b19f3e3eecbda50) · Linear: [SUB-2](https://linear.app/tang-workspace/issue/SUB-2)
+Project plan: [v0.1 Soft Launch Plan](https://www.notion.so/36259290728581dd8b19f3e3eecbda50) · Linear: [SUB-3](https://linear.app/tang-workspace/issue/SUB-3)
 
 ---
 
@@ -41,7 +41,7 @@ Work currently underway. One entry per concrete unit of work (feature, file, mig
 
 | Date Started | Item | Owner / Branch | Status Notes |
 |--------------|------|----------------|--------------|
-| 2026-05-16   | SUB-2 — Button + useOptimisticAction + usePress | Long / `SUB-1/monorepo-tooling-setup` | Just started. |
+| 2026-05-16   | SUB-3 — Kbd component | Long / `sub-3-kbd` | Not started. |
 
 ---
 
@@ -51,6 +51,7 @@ Most recent at the top. Trim aggressively — anything older than the current mi
 
 ### 2026-05-16
 
+- **SUB-2 — Button + useOptimisticAction + usePress** — complete. `usePress` (pointerdown, cancel, leave, keyboard), `useOptimisticAction` (optimistic state, error callback), `Button` (4 variants, 3 sizes, disabled, press scale, springs wired). 14 tests green. Preview at `/preview/button`.
 - **SUB-1 — Monorepo + tooling setup** — complete. pnpm workspaces, Turborepo, Biome, Changesets, Next.js 16 + Tailwind v4, `packages/ui` + `packages/ai` stubs, registry route + build script stub. Typecheck green.
 
 ---
@@ -61,7 +62,6 @@ Planned but not started. Group by area so it's easy to scan. Order within each g
 
 ### v0.1 — Soft Launch (Cycle 1, May 16–22)
 
-- **SUB-2** — Button + `useOptimisticAction` + `usePress`. The load-bearing component; every other one inherits the pattern.
 - **SUB-3** — Kbd component. Tiny, identity-defining.
 - **SUB-4** — CommandMenu. The headline composition; protect this work.
 
