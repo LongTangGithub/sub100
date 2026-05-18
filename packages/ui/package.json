@@ -7,7 +7,9 @@
     "./components/button": "./src/components/button.tsx",
     "./hooks/use-optimistic-action": "./src/hooks/use-optimistic-action.ts",
     "./hooks/use-motion": "./src/hooks/use-motion.ts",
-    "./lib/springs": "./src/lib/springs.ts"
+    "./lib/springs": "./src/lib/springs.ts",
+    "./components/kbd": "./src/components/kbd.tsx",
+    "./lib/format-shortcut": "./src/lib/format-shortcut.ts"
   },
   "scripts": {
     "test": "vitest run",
