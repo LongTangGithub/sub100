@@ -27,6 +27,12 @@ Each rule should be:
 
 ## Workflow
 
+- (2026-05-19) Rule: When wiring two libraries together (cmdk + Radix Dialog, future: Toast + form lib, etc.), explicitly trace control flow for every state transition — open, close, select, dismiss. Don't assume "the libraries handle it." Each library owns its own concerns; the wiring between them is the consumer's job.
+  Why: SUB-4 caught a real bug pre-preview from architectural reasoning, not broken UI: cmdk's onSelect fires the action but doesn't close Radix Dialog. Uncontrolled mode meant consumer had no setter. Would have shipped as visible jank if not caught by tracing the close path.
+
+- (2026-05-19) Rule: Before opening a PR, run visual review on screenshots in both light AND dark OS mode. Most theme bugs surface in only one mode. Tests can't catch this — visual review is the only check.
+  Why: SUB-4 had a dark menu / light page mismatch invisible in light-mode dev but visible to recruiters on dark-OS machines. Caught by skill-augmented visual review before PR open.
+
 - (2026-05-18) Rule: Read issue acceptance criteria critically. Specs get copy-pasted between issues and may carry assumptions that don't fit the new component. When something in the spec feels off, pause and ask whether it was deliberate or template noise.
   Why: SUB-3's spec had "transform-only press feedback" suggesting Kbd should be pressable. After comparing industry conventions (GitHub, Linear, Stripe, Apple HIG, Material), the right call was pure display + parent affordance. Was likely copy-paste from Button's acceptance criteria.
 
@@ -40,6 +46,12 @@ Each rule should be:
   Why: SUB-2 merged without verifying `prefers-reduced-motion`, `focus-visible`, or registry script wiring because the PR description didn't mention them. Three acceptance criteria gaps became carry-forward work (SUB-9) that should have been caught at PR review.
 
 ## Code
+
+- (2026-05-19) Rule: For compound components (CommandMenu.Input, CommandMenu.Item, etc.), use Object.assign on the root function for typed dot-access. Keeps all sub-components in a single file, avoids module augmentation or namespace declarations, exports trivially as a single import.
+  Why: SUB-4 shipped 6 sub-components on CommandMenu via Object.assign — full TypeScript inference, single-file readability, one import statement for consumers.
+
+- (2026-05-19) Rule: When a React context has a function default that consumers can safely call without a Provider, type it as the function and default to a no-op. Avoids null checks at every call site, makes the component robust if used outside its expected tree.
+  Why: SUB-4's CommandMenuCloseContext defaults to () => {}. If <CommandMenu.Item> ever renders outside <CommandMenu>, the call to close() is a no-op instead of a crash.
 
 - (2026-05-18) Rule: When a utility is consumed exclusively by client components in v0.1 ('use client'), SSR concerns can be documented and deferred rather than solved upfront. Build the simpler implementation, comment the limitation, fix when an actual SSR consumer appears.
   Why: format-shortcut.ts has a theoretical hydration mismatch on SSR. Solving it would have required useSyncExternalStore-style coordination in Kbd. Since all v0.1 consumers are client-side, the simpler implementation was correct and the limitation was documented for v0.2.
