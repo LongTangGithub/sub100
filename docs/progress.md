@@ -29,9 +29,9 @@ When finishing:
 
 ## Current Focus
 
-**SUB-4 — CommandMenu.** The headline composition for v0.1. Built on cmdk + Radix Dialog with sub100's motion, focus ring, and Kbd integration on top. Declarative JSX API (no kbar-style hooks in v0.1). This is the "wow" — recruiters will hit ⌘K and decide whether to keep scrolling.
+**SUB-5 — Dialog + ConfirmDialog composition.** Lift the Radix Dialog wrapper out of CommandMenu into a standalone primitive, then build ConfirmDialog on top.
 
-Project plan: [v0.1 Soft Launch Plan](https://www.notion.so/36259290728581dd8b19f3e3eecbda50) · Linear: [SUB-4](https://linear.app/tang-workspace/issue/SUB-4/commandmenu)
+Project plan: [v0.1 Soft Launch Plan](https://www.notion.so/36259290728581dd8b19f3e3eecbda50) · Linear: SUB-5
 
 ---
 
@@ -41,13 +41,17 @@ Work currently underway. One entry per concrete unit of work (feature, file, mig
 
 | Date Started | Item | Owner / Branch | Status Notes |
 |--------------|------|----------------|--------------|
-| 2026-05-19   | SUB-4 — CommandMenu | Long / `sub-4-commandmenu` | Decisions locked. Phase plan in Linear. |
+| 2026-05-20   | SUB-5 — Dialog + ConfirmDialog | Long / `sub-5-dialog` | Not started. |
 
 ---
 
 ## Completed
 
 Most recent at the top. Trim aggressively — anything older than the current milestone can be archived to `progress-archive.md` or deleted.
+
+### 2026-05-19
+
+- **SUB-4** — CommandMenu shipped via [PR #6](https://github.com/LongTangGithub/sub100/pull/6). ⌘K palette on cmdk + Radix Dialog. Declarative JSX API, controlled + uncontrolled, `closeOnSelect` auto-close via React context, `useMotion(springs.reveal)` for reduced-motion. 8 new tests; 43 total. Dark-mode preview pages bundled. Open-to-paint < 100ms verified in preview.
 
 ### 2026-05-18
 
@@ -71,11 +75,11 @@ Planned but not started. Group by area so it's easy to scan. Order within each g
 ### v0.1 — Soft Launch (Cycle 1, May 16–22)
 
 - ~~**SUB-3**~~ — shipped.
-- ~~**SUB-4**~~ — in progress (see above).
+- ~~**SUB-4**~~ — shipped.
 
 ### v0.1 — Soft Launch (Cycle 2, May 23–29)
 
-- **SUB-5** — Dialog + ConfirmDialog composition.
+- **SUB-5** — in progress (see above).
 - **SUB-6** — Toast + ToastQueue (wires to optimistic action failures).
 - **SUB-7** — Docs site shell + MDX pages + CLI install flow.
 - **SUB-8** — Speed-lab demo page + Playwright timing budgets. The artifact people will share.
@@ -105,6 +109,13 @@ Anything waiting on a decision, an external dependency, or clarification. Each e
 ## Decisions Log
 
 Significant technical or product decisions made during the project. Append-only — don't rewrite history, add a new entry if a decision is reversed.
+
+### 2026-05-19 — Auto-close on item select, opt-out via `closeOnSelect={false}`
+
+- **Context:** cmdk's `onSelect` fires the action but does not close the host Dialog. In uncontrolled mode the consumer has no setter — selecting "Open Button preview" would navigate but leave the menu open over the new route. shadcn / Linear / Raycast all auto-close by default.
+- **Decision:** `CommandMenu.Item` wraps `onSelect` to also call a close fn from `CommandMenuCloseContext` (Provider in the root). `closeOnSelect` prop defaults `true`, opt-out per-item.
+- **Alternatives considered:** (a) make every consumer pass `open`/`onOpenChange` (loses the global ⌘K ergonomics), (b) close-after-await on async onSelect (gates UX on network).
+- **Consequences:** Auto-close fires immediately, not gated on async `onSelect` resolution — aligned with sub100 thesis (perceived speed > strict correctness). Consumer handles async failure via Toast (SUB-6) or re-open.
 
 ### 2026-05-18 — Declarative JSX children for CommandMenu, not kbar-style hooks
 
