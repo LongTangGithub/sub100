@@ -38,7 +38,7 @@ function OptimisticDemo() {
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-sm text-neutral-500">
+      <p className="text-sm text-neutral-500 dark:text-neutral-400 text-pretty">
         Optimistic action — fails ~30% of the time
       </p>
       <Button
@@ -73,9 +73,9 @@ function ReducedMotionDemo() {
 
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-sm text-neutral-500">
+      <p className="text-sm text-neutral-500 dark:text-neutral-400 text-pretty">
         Motion preference:{" "}
-        <span className="font-medium text-neutral-900">
+        <span className="font-medium text-neutral-900 dark:text-neutral-100">
           {isReduced ? "reduced" : "full"}
         </span>{" "}
         — toggle in OS settings → the press transition should become instant
@@ -89,10 +89,10 @@ function ReducedMotionDemo() {
 
 export default function ButtonPreview() {
   return (
-    <main className="min-h-screen p-12 flex flex-col gap-12 max-w-2xl">
+    <main className="min-h-screen p-12 flex flex-col gap-12 max-w-2xl dark:bg-neutral-950">
       <div>
-        <h1 className="text-2xl font-semibold mb-1 text-balance">Button</h1>
-        <p className="text-sm text-neutral-500">
+        <h1 className="text-2xl font-semibold mb-1 text-balance dark:text-neutral-100">Button</h1>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 text-pretty">
           Press fires on pointerdown. Transforms commit in &lt;16ms.
         </p>
       </div>
@@ -144,7 +144,7 @@ export default function ButtonPreview() {
         <h2 className="text-sm font-medium text-neutral-400 uppercase tracking-wider">
           Focus Ring ( keyboard navigation )
         </h2>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 text-pretty">
           Tab to each button - the ring should appear on keyboard focus only
         </p>
         <div className="flex flex-wrap gap-3">

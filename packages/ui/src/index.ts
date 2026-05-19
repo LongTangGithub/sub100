@@ -9,3 +9,5 @@ export type { SpringPreset } from "./lib/springs";
 export { Kbd } from "./components/kbd";
 export { kbdVariants } from "./components/kbd.variants";
 export { formatShortcut } from "./lib/format-shortcut";
+
+export { CommandMenu } from "./components/command-menu";

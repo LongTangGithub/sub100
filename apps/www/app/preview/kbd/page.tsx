@@ -17,10 +17,10 @@ const DEMO_SHORTCUTS = [
 
 export default function KbdPreview() {
   return (
-    <main className="min-h-screen p-12 flex flex-col gap-12 max-w-2xl">
+    <main className="min-h-screen p-12 flex flex-col gap-12 max-w-2xl dark:bg-neutral-950">
       <div>
-        <h1 className="text-2xl font-semibold mb-1 text-balance">Kbd</h1>
-        <p className="text-sm text-neutral-500">
+        <h1 className="text-2xl font-semibold mb-1 text-balance dark:text-neutral-100">Kbd</h1>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 text-pretty">
           Semantic keycap. Lifts on parent hover. Respects reduced motion.
         </p>
       </div>
@@ -78,7 +78,7 @@ export default function KbdPreview() {
         <h2 className="text-sm font-medium text-neutral-400 uppercase tracking-wider">
           Parent affordance lift
         </h2>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 text-pretty">
           Hover a row — the keycap lifts by 1px.
         </p>
         {/* Parent must have className="group" for Kbd to react */}
