@@ -29,9 +29,9 @@ When finishing:
 
 ## Current Focus
 
-**SUB-3 — Kbd component.** Tiny, identity-defining.
+**SUB-4 — CommandMenu.** The headline composition for v0.1. Built on cmdk + Radix Dialog with sub100's motion, focus ring, and Kbd integration on top. Declarative JSX API (no kbar-style hooks in v0.1). This is the "wow" — recruiters will hit ⌘K and decide whether to keep scrolling.
 
-Project plan: [v0.1 Soft Launch Plan](https://www.notion.so/36259290728581dd8b19f3e3eecbda50) · Linear: [SUB-3](https://linear.app/tang-workspace/issue/SUB-3)
+Project plan: [v0.1 Soft Launch Plan](https://www.notion.so/36259290728581dd8b19f3e3eecbda50) · Linear: [SUB-4](https://linear.app/tang-workspace/issue/SUB-4/commandmenu)
 
 ---
 
@@ -41,7 +41,7 @@ Work currently underway. One entry per concrete unit of work (feature, file, mig
 
 | Date Started | Item | Owner / Branch | Status Notes |
 |--------------|------|----------------|--------------|
-| 2026-05-16   | SUB-3 — Kbd component | Long / `sub-3-kbd` | Not started. |
+| 2026-05-19   | SUB-4 — CommandMenu | Long / `sub-4-commandmenu` | Decisions locked. Phase plan in Linear. |
 
 ---
 
@@ -49,14 +49,18 @@ Work currently underway. One entry per concrete unit of work (feature, file, mig
 
 Most recent at the top. Trim aggressively — anything older than the current milestone can be archived to `progress-archive.md` or deleted.
 
+### 2026-05-18
+
+- **SUB-3** — Kbd + formatShortcut shipped via [PR #5](https://github.com/LongTangGithub/sub100/pull/5). Semantic `<kbd>`, parent affordance lift, platform-aware shortcut util. 15 new tests; 33 total in repo.
+
 ### 2026-05-17
 
-- **SUB-9 — prefers-reduced-motion + focus-visible polish** — complete. `useMotion` rewritten with `useSyncExternalStore` (no hydration flash). Focus ring consolidated to single `--color-ring` token. `springs.ts` cubic-bezier bug fixed. 19 tests green (4 new for `useMotion`, 1 new focus-visible class check). Preview updated with Focus ring + Reduced motion sections. Typecheck + build green.
+- **SUB-9** — Polish on SUB-2 shipped via [PR #4](https://github.com/LongTangGithub/sub100/pull/4). `prefers-reduced-motion` via `useMotion` hook with `useSyncExternalStore`. Single `--color-ring` token across all 4 button variants. Bundled cubic-bezier bug fix in springs.ts.
+- **SUB-2** — Button + usePress + useOptimisticAction shipped via [PR #2](https://github.com/LongTangGithub/sub100/pull/2). The load-bearing trio that every other component inherits. Three acceptance criteria gaps surfaced after merge → caught by new `learnings.md` rule, fixed in SUB-9.
 
 ### 2026-05-16
 
-- **SUB-2 — Button + useOptimisticAction + usePress** — complete. `usePress` (pointerdown, cancel, leave, keyboard), `useOptimisticAction` (optimistic state, error callback), `Button` (4 variants, 3 sizes, disabled, press scale, springs wired). 14 tests green. Preview at `/preview/button`.
-- **SUB-1 — Monorepo + tooling setup** — complete. pnpm workspaces, Turborepo, Biome, Changesets, Next.js 16 + Tailwind v4, `packages/ui` + `packages/ai` stubs, registry route + build script stub. Typecheck green.
+- **SUB-1** — Monorepo + tooling foundation shipped via [PR #1](https://github.com/LongTangGithub/sub100/pull/1). pnpm + Turborepo with `apps/www`, `packages/ui`, `packages/ai`. Biome, Tailwind v4, Changesets, stub registry endpoint, shared `tsconfig.base.json`.
 
 ---
 
@@ -66,8 +70,8 @@ Planned but not started. Group by area so it's easy to scan. Order within each g
 
 ### v0.1 — Soft Launch (Cycle 1, May 16–22)
 
-- **SUB-3** — Kbd component. Tiny, identity-defining.
-- **SUB-4** — CommandMenu. The headline composition; protect this work.
+- ~~**SUB-3**~~ — shipped.
+- ~~**SUB-4**~~ — in progress (see above).
 
 ### v0.1 — Soft Launch (Cycle 2, May 23–29)
 
@@ -102,12 +106,19 @@ Anything waiting on a decision, an external dependency, or clarification. Each e
 
 Significant technical or product decisions made during the project. Append-only — don't rewrite history, add a new entry if a decision is reversed.
 
-### 2026-05-16 — AI primitives ship as opt-in package, not in core
+### 2026-05-18 — Declarative JSX children for CommandMenu, not kbar-style hooks
 
-- **Context:** Initial thinking had AI-native components (StreamingText, ToolCallCard, etc.) headlining the library. Risked locking out non-AI consumers and bloating install surface.
-- **Decision:** Core `packages/ui` stays domain-agnostic. AI components live in `packages/ai` (`@sub100/ai`), opt-in.
-- **Alternatives considered:** (a) Ship AI primitives as headline in core. (b) Stay framework-agnostic, treat AI as just an example.
-- **Consequences:** Registry endpoint must be namespaced (`/r/ui/[name]`, `/r/ai/[name]`). Two packages need independent versioning (Changesets becomes load-bearing). Marketing positions AI as the *proof point* for the sub-100 thesis, not the product itself.
+- **Context:** SUB-4 design considered three API shapes — declarative JSX children (cmdk-native), imperative `useRegisterActions` hook (kbar-style global store + automatic cleanup + dependency reactivity), and a hybrid.
+- **Decision:** Declarative JSX children only for v0.1. `<CommandMenu><Group><Item /></Group></CommandMenu>` maps 1:1 with cmdk's native API. No global store, no context provider, no hook.
+- **Alternatives considered:** kbar-style hybrid would let deeply nested components inject actions into a root-mounted CommandMenu with automatic cleanup. Real benefits for complex apps, but solves problems v0.1 demo doesn't have.
+- **Consequences:** v0.1 ships fast and clean. If consumers later need cross-component action registration, we layer a `useRegisterActions` hook in v0.2 — easier to add later than to remove now.
+
+### 2026-05-17 — `useSyncExternalStore` over `useState`/`useEffect` for browser-state hooks
+
+- **Context:** SUB-9 needed a hook that reads `prefers-reduced-motion` and updates if the user toggles their OS preference. First implementation used `useState(false)` + `useEffect` to populate, which caused a hydration flash (first client render returned `false` regardless of preference).
+- **Decision:** `useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)` — React-idiomatic for subscribing to browser state without tearing. Reads synchronously on first client render; SSR-safe via `getServerSnapshot`.
+- **Alternatives considered:** Default-to-Mac during SSR (lazy); keep `useState` and accept the flash (worse for Dialog/Toast which animate on mount).
+- **Consequences:** Pattern becomes the standard for any future browser-state subscription (theme, viewport size, online status, etc.). One-time learning cost; pays off across the library.
 
 ### 2026-05-17 — useSyncExternalStore for useMotion over useState/useEffect
 
@@ -122,6 +133,13 @@ Significant technical or product decisions made during the project. Append-only 
 - **Decision:** Single `--color-ring` token (`oklch` blue-500) applied via `focus-visible:ring-ring` in button base class. All variants share one canonical ring.
 - **Alternatives considered:** Per-variant rings (more control, more drift risk). No ring (accessibility regression).
 - **Consequences:** One token to override for theming. Consistent keyboard navigation UX across all button variants.
+
+### 2026-05-16 — AI primitives ship as opt-in package, not in core
+
+- **Context:** Initial thinking had AI-native components (StreamingText, ToolCallCard, etc.) headlining the library. Risked locking out non-AI consumers and bloating install surface.
+- **Decision:** Core `packages/ui` stays domain-agnostic. AI components live in `packages/ai` (`@sub100/ai`), opt-in.
+- **Alternatives considered:** (a) Ship AI primitives as headline in core. (b) Stay framework-agnostic, treat AI as just an example.
+- **Consequences:** Registry endpoint must be namespaced (`/r/ui/[name]`, `/r/ai/[name]`). Two packages need independent versioning (Changesets becomes load-bearing). Marketing positions AI as the *proof point* for the sub-100 thesis, not the product itself.
 
 ### 2026-05-16 — React 19 primitives only for state inside the library
 
