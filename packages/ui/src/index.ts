@@ -11,3 +11,6 @@ export { kbdVariants } from "./components/kbd.variants";
 export { formatShortcut } from "./lib/format-shortcut";
 
 export { CommandMenu } from "./components/command-menu";
+
+export { Dialog } from "./components/dialog";
+export { ConfirmDialog } from "./components/confirm-dialog"; 
