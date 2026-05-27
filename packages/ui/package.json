@@ -10,7 +10,9 @@
     "./lib/springs": "./src/lib/springs.ts",
     "./components/kbd": "./src/components/kbd.tsx",
     "./lib/format-shortcut": "./src/lib/format-shortcut.ts",
-    "./components/command-menu": "./src/components/command-menu.tsx"
+    "./components/command-menu": "./src/components/command-menu.tsx",
+    "./components/dialog": "./src/components/dialog.tsx",
+    "./components/confirm-dialog": "./src/components/confirm-dialog.tsx"
   },
   "scripts": {
     "test": "vitest run",

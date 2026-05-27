@@ -11,9 +11,10 @@ export const buttonVariants = tv({
   variants: {
     variant: {
       default: "bg-neutral-100 text-neutral-900 hover:bg-neutral-200",
-      primary: "bg-neutral-900 text-white hover:bg-neutral-700",
+      primary:
+        "bg-neutral-900 text-white hover:bg-neutral-700 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200",
       ghost:
-        "bg-transparent text-neutral-700 ring-1 ring-neutral-200 hover:bg-neutral-100 hover:ring-0",
+        "bg-transparent text-neutral-700 ring-1 ring-neutral-200 hover:bg-neutral-100 hover:ring-0 dark:text-neutral-300 dark:ring-neutral-700 dark:hover:bg-neutral-800",
       destructive: "bg-red-600 text-white hover:bg-red-700",
     },
     size: {
