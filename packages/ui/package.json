@@ -12,7 +12,8 @@
     "./lib/format-shortcut": "./src/lib/format-shortcut.ts",
     "./components/command-menu": "./src/components/command-menu.tsx",
     "./components/dialog": "./src/components/dialog.tsx",
-    "./components/confirm-dialog": "./src/components/confirm-dialog.tsx"
+    "./components/confirm-dialog": "./src/components/confirm-dialog.tsx",
+    "./components/toaster": "./src/components/toaster.tsx"
   },
   "scripts": {
     "test": "vitest run",
@@ -33,6 +34,7 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
     "cmdk": "^1.1.1",
+    "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
     "tailwind-variants": "^3.2.2"
   }
