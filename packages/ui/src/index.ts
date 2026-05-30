@@ -13,4 +13,7 @@ export { formatShortcut } from "./lib/format-shortcut";
 export { CommandMenu } from "./components/command-menu";
 
 export { Dialog } from "./components/dialog";
-export { ConfirmDialog } from "./components/confirm-dialog"; 
+export { ConfirmDialog } from "./components/confirm-dialog";
+
+export { Toaster } from "./components/toaster";
+export { toast } from "sonner";

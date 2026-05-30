@@ -1,0 +1,27 @@
+/* Toast surface overrides — default (plain) toast matches Dialog content surface.
+ *
+ * Sonner 2.x dark/light scoping uses [data-sonner-theme="dark"|"light"] on the
+ * wrapper (NOT [data-theme]). Variant colors (--success/error/warning-*) are
+ * owned by Sonner's richColors palette — don't override here.
+ */
+
+[data-sonner-toaster][data-sonner-theme="light"] {
+  --normal-bg: #ffffff;
+  --normal-text: var(--color-neutral-900);
+  --normal-border: var(--color-neutral-200);
+}
+
+[data-sonner-toaster][data-sonner-theme="dark"] {
+  --normal-bg: var(--color-neutral-900);
+  --normal-text: var(--color-neutral-100);
+  --normal-border: transparent;
+}
+
+/* Dark-mode edge — hairline ring on every toast.
+ * Matches Dialog's dark-mode edge treatment from SUB-5 (surfaces.md). */
+[data-sonner-toaster][data-sonner-theme="dark"] [data-sonner-toast] {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 10px 38px -10px rgba(0, 0, 0, 0.5),
+    0 10px 20px -15px rgba(0, 0, 0, 0.4);
+}
