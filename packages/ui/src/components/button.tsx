@@ -6,11 +6,11 @@ import { buttonVariants } from "./button.variants";
 import { springs } from "../lib/springs";
 import type { VariantProps } from "tailwind-variants";
 
-interface ButtonProps extends VariantProps<typeof buttonVariants> {
+interface ButtonProps
+  extends VariantProps<typeof buttonVariants>,
+    Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onPress"> {
   children: React.ReactNode;
   onPress?: () => void;
-  disabled?: boolean;
-  className?: string;
 }
 
 export function Button({
@@ -20,6 +20,7 @@ export function Button({
   variant,
   size,
   className,
+  ...rest
 }: ButtonProps) {
   const { isPressed, pressProps } = usePress({ onPress, disabled });
   const motion = useMotion(springs.press);
@@ -36,6 +37,7 @@ export function Button({
         transition: `transform ${motion.duration}ms ${motion.easing}, filter ${motion.duration}ms ${motion.easing}`,
       }}
       {...pressProps}
+      {...rest}
     >
       {children}
     </button>

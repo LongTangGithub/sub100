@@ -1,0 +1,21 @@
+{
+  "lastRun": "2026-05-31T16:54:22.549Z",
+  "results": {
+    "actionFailToToast": {
+      "value": 26.35,
+      "budget": 100,
+      "unit": "ms"
+    },
+    "keypressToFilter": {
+      "value": 11.95,
+      "budget": 50,
+      "unit": "ms"
+    },
+    "pointerdownToPaint": {
+      "value": 32.05,
+      "budget": 40,
+      "unit": "ms"
+    }
+  },
+  "commitSha": "31800d2"
+}
