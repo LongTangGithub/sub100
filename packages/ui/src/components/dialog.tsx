@@ -44,12 +44,6 @@ function DialogRoot({ open, onOpenChange, children, label }: DialogProps) {
     )
 }
 
-function DialogTrigger(
-    props: React.ComponentProps<typeof RadixDialog.Trigger>,
-) {
-    return <RadixDialog.Trigger {...props} />
-}
-
 function DialogTitle(
     props: React.ComponentProps<typeof RadixDialog.Title>,
 ) {
@@ -82,15 +76,14 @@ function DialogFooter({
     );
 }
 
-function DialogClose(props: React.ComponentProps<typeof RadixDialog.Close>) {
-    return <RadixDialog.Close {...props} />;
-}
-
+// Dialog.Trigger + Dialog.Close intentionally removed —
+// the wrapper renders children inside Radix Content, so Trigger never mounts
+// when the dialog is closed. Re-introduce once Dialog is refactored to render
+// children at Root level (SUB-X follow-up). Until then, control via
+// `open` / `onOpenChange` and an external Button.
 export const Dialog = Object.assign(DialogRoot, {
-    Trigger: DialogTrigger,
     Title: DialogTitle,
     Description: DialogDescription,
     Body: DialogBody,
     Footer: DialogFooter,
-    Close: DialogClose,
 });

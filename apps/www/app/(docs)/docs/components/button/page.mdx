@@ -1,0 +1,174 @@
+import {
+  AsyncErrorDemo,
+  OptimisticDemo,
+  VariantsGrid,
+} from "@/components/button-demos";
+
+export const frontmatter = {
+  title: "Button",
+  description:
+    "The most-used component in any app, written to feel instant. Variants, sizes, and optimistic actions.",
+};
+
+# Button
+
+<Lead>The most-used component in any app, written to feel instant. Variants, sizes, optimistic actions — the press is the demo of the thesis.</Lead>
+
+Button ships four variants (`default`, `primary`, `destructive`, `ghost`)
+and three sizes (`sm`, `md`, `lg`).
+
+The `onPress` handler fires on pointer-down — about 12ms ahead of `onClick`.
+Combined with `useOptimisticAction`, async work feels instant: the label
+flips immediately, the server resolves silently, and failures route through
+your error handler.
+
+<InstallCommand command="npx sub100 add button" />
+
+Files land at `components/button.tsx` and `components/button.variants.ts`,
+plus the shared `hooks/use-press.ts`, `hooks/use-motion.ts`, and
+`lib/springs.ts` if you don't already have them.
+
+## Examples
+
+### Variants and sizes
+
+Four variants, three sizes. `primary` defaults to `neutral-900` in light mode
+and inverts to white in dark mode so it stays the highest-contrast affordance
+on any surface. `ghost` is a ring-only treatment for secondary actions; the
+ring drops on hover and the surface fills in.
+
+<ComponentPreview
+  code={
+    <CodeBlock language="tsx">{`<Button variant="default">default</Button>
+<Button variant="primary">primary</Button>
+<Button variant="destructive">destructive</Button>
+<Button variant="ghost">ghost</Button>
+
+// All three sizes work for every variant.
+<Button size="sm">sm</Button>
+<Button size="md">md</Button>
+<Button size="lg">lg</Button>`}</CodeBlock>
+  }
+>
+  <VariantsGrid />
+</ComponentPreview>
+
+### Optimistic press feedback
+
+`onPress` fires on pointer-down, about 12ms ahead of `onClick`. The label
+flips instantly; the async work runs silently behind it. Tap the button
+below and watch the label change before any frame of work happens.
+
+<ComponentPreview
+  code={
+    <CodeBlock language="tsx">{`"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@sub100/ui";
+
+export function SaveButton() {
+  const [saved, setSaved] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+  }, []);
+
+  const handleSave = () => {
+    setSaved(true);
+    setTimeout(() => {
+      timer.current = setTimeout(() => setSaved(false), 1800);
+    }, 600);
+  };
+
+  return (
+    <Button variant="primary" onPress={handleSave}>
+      {saved ? "Saved · just now" : "Save changes"}
+    </Button>
+  );
+}`}</CodeBlock>
+  }
+>
+  <OptimisticDemo />
+</ComponentPreview>
+
+### Async actions with errors
+
+Failures route through `onError`. Wire it to `toast.error` from the same
+library so the failure surface arrives in the same frame as the recovery
+hint. The demo below fails about 30% of the time on purpose — tap a few
+times to see both paths.
+
+<ComponentPreview
+  code={
+    <CodeBlock language="tsx">{`"use client";
+
+import { Button, toast, useOptimisticAction } from "@sub100/ui";
+
+export function SyncButton() {
+  const { execute, isPending } = useOptimisticAction({
+    action: async () => {
+      await fetch("/api/sync", { method: "POST" });
+    },
+    optimisticData: true,
+    onError: (err) => {
+      toast.error("Couldn't sync", {
+        description: err instanceof Error ? err.message : String(err),
+      });
+    },
+  });
+
+  return (
+    <Button onPress={execute} disabled={isPending}>
+      {isPending ? "Syncing…" : "Sync"}
+    </Button>
+  );
+}`}</CodeBlock>
+  }
+>
+  <AsyncErrorDemo />
+</ComponentPreview>
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `"default"` \| `"primary"` \| `"destructive"` \| `"ghost"` | `"default"` | Visual style. `primary` inverts in dark mode for surface contrast. |
+| `size` | `"sm"` \| `"md"` \| `"lg"` | `"md"` | Height and font scaling. |
+| `onPress` | `() => void` | — | Fires on pointer-down, ahead of click. Preferred for instant feedback; `usePress` handles Enter and Space for keyboard parity. |
+| `disabled` | `boolean` | `false` | Disables the press handler and applies `disabled:opacity-50`. |
+| `children` | `ReactNode` | — | Label content. |
+| `className` | `string` | — | Merged into the variant classes via `tailwind-variants`. |
+
+## Why
+
+### onPress, not onClick
+
+The pointer-down event fires about 12ms before the click event. Across the
+lifetime of an app — every menu tap, every dialog confirm, every form
+submission — those milliseconds compound into a felt difference between
+"responsive" and "instant." Button's `onPress` exposes that head start. The
+cost is that keyboard activation needs explicit handling, which `usePress`
+provides via Enter and Space key listeners. If you need strict
+keyboard-vs-pointer parity for accessibility certification, expose `onClick`
+on a wrapper; if you want perceived-instant feedback, ship `onPress`.
+
+### Primary inverts in dark mode
+
+Same content, opposite color. In light mode, `primary` is
+`bg-neutral-900 text-white` — high contrast against a light surface. In dark
+mode, that same button would disappear against a dark `Dialog.Content`
+surface, so `primary` becomes `dark:bg-white dark:text-neutral-900`. Linear,
+Vercel, Raycast, and Stripe all do this. The inversion principle scales:
+`primary` stays the highest-contrast element on whatever surface it lands on,
+without the consumer thinking about it.
+
+### Optimistic, not "loading state"
+
+Traditional async UIs show a spinner during the request and reveal the
+result on resolve. `useOptimisticAction` inverts the model: the label flips
+immediately, the server runs silently, the spinner never appears. If the
+request succeeds, the user already moved on. If it fails, `onError` fires
+and you wire it to [Toast](/docs/components/toast) for instant recovery
+surface. The rare failure is more honestly surfaced via Toast than via a
+perpetual spinner that turns into a quiet error message.

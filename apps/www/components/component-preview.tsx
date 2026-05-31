@@ -13,7 +13,7 @@ export function ComponentPreview({ children, code }: ComponentPreviewProps) {
   const [tab, setTab] = useState<Tab>("preview");
 
   return (
-    <div className="my-6 rounded-xl border border-neutral-200 dark:border-neutral-800 overflow-hidden">
+    <div className="my-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden shadow-sm dark:shadow-none">
       <div
         role="tablist"
         className="flex border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900"
@@ -27,11 +27,11 @@ export function ComponentPreview({ children, code }: ComponentPreviewProps) {
       </div>
 
       {tab === "preview" ? (
-        <div className="p-8 flex items-center justify-center min-h-[160px] bg-white dark:bg-neutral-950">
+        <div className="p-8 flex items-center justify-center min-h-[160px] bg-white dark:bg-neutral-900">
           {children}
         </div>
       ) : (
-        <div className="bg-white dark:bg-neutral-950">{code}</div>
+        <div className="bg-white dark:bg-neutral-900">{code}</div>
       )}
     </div>
   );

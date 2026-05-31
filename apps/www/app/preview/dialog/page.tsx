@@ -11,6 +11,7 @@ function delay(ms: number): Promise<void> {
 }
 
 export default function DialogPreview() {
+  const [basicOpen, setBasicOpen] = useState(false);
   const [saveOpen, setSaveOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [riskyOpen, setRiskyOpen] = useState(false);
@@ -40,13 +41,11 @@ export default function DialogPreview() {
           Basic Dialog (compound)
         </h2>
         <p className="text-sm text-neutral-500 dark:text-neutral-400 text-pretty">
-          Full compound API - Title, Description, Body, Footer. Uncontrolled via
-          Dialog.Trigger
+          Full compound API - Title, Description, Body, Footer. Controlled
+          via open / onOpenChange.
         </p>
-        <Dialog>
-          <Dialog.Trigger asChild>
-            <Button>Open Dialog</Button>
-          </Dialog.Trigger>
+        <Button onPress={() => setBasicOpen(true)}>Open Dialog</Button>
+        <Dialog open={basicOpen} onOpenChange={setBasicOpen}>
           <Dialog.Title>New project</Dialog.Title>
           <Dialog.Description>
             A project bundles your components, design tokens, and registry
@@ -57,9 +56,9 @@ export default function DialogPreview() {
             software, but you don't have to get it right the first time.
           </Dialog.Body>
           <Dialog.Footer>
-            <Dialog.Close asChild>
-              <Button variant="ghost">Close</Button>
-            </Dialog.Close>
+            <Button variant="ghost" onPress={() => setBasicOpen(false)}>
+              Close
+            </Button>
           </Dialog.Footer>
         </Dialog>
       </section>

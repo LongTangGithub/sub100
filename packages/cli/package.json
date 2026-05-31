@@ -2,12 +2,15 @@
   "name": "sub100",
   "version": "0.1.0",
   "description": "CLI for installing sub100 components.",
-  "bin": { "sub100": "./bin/sub100.js" },
+  "bin": { "sub100": "bin/sub100.js" },
   "files": ["bin", "dist", "README.md"],
   "main": "./dist/index.js",
   "type": "module",
   "engines": { "node": ">=18" },
-  "repository": "https://github.com/LongTangGithub/sub100",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LongTangGithub/sub100.git"
+  },
   "license": "MIT",
   "scripts": {
     "build": "tsc",

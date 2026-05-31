@@ -1,0 +1,171 @@
+import { BasicDemo, ConfirmDemo } from "@/components/dialog-demos";
+
+export const frontmatter = {
+  title: "Dialog",
+  description:
+    "Focus-trapped, accessible dialog built on Radix. Compound API for full control over header, body, and footer composition.",
+};
+
+# Dialog
+
+<Lead>A focus-trapped, accessible dialog built on Radix. Compound API for full control over header, body, and footer composition.</Lead>
+
+Dialog is a compound component. `Dialog.Title` + `Dialog.Description` sit at
+the top of the surface, and `Dialog.Body` + `Dialog.Footer` structure the
+rest. State is controlled — pass `open` and `onOpenChange`, and open the
+dialog from any control by calling `setOpen(true)`.
+
+<InstallCommand command="npx sub100 add dialog" />
+
+Files land at `components/dialog.tsx` and `components/dialog.variants.ts`.
+
+## Examples
+
+### Basic dialog
+
+One trigger, one surface, three slots. The Save action closes the dialog and
+fires a toast.
+
+<ComponentPreview
+  code={
+    <CodeBlock language="tsx">{`"use client";
+
+import { useState } from "react";
+import { Button, Dialog, toast } from "@sub100/ui";
+
+export function SettingsDialog() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button variant="primary" onPress={() => setOpen(true)}>
+        Open dialog
+      </Button>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog.Title>Project settings</Dialog.Title>
+        <Dialog.Description>
+          Configure the basics for this project. You can rename it later.
+        </Dialog.Description>
+        <Dialog.Body>
+          Settings sync to your account in the background.
+        </Dialog.Body>
+        <Dialog.Footer>
+          <Button variant="ghost" onPress={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onPress={() => {
+              setOpen(false);
+              toast.success("Settings saved");
+            }}
+          >
+            Save
+          </Button>
+        </Dialog.Footer>
+      </Dialog>
+    </>
+  );
+}`}</CodeBlock>
+  }
+>
+  <BasicDemo />
+</ComponentPreview>
+
+## Props
+
+### Root — `Dialog`
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | — | Controlled open state. |
+| `onOpenChange` | `(open: boolean) => void` | — | Fires when the dialog opens or closes (Esc, outside click, or `setOpen` in your handler). |
+| `label` | `string` | — | `sr-only` fallback title for accessibility when no `Dialog.Title` is rendered. Prefer `Dialog.Title`. |
+| `children` | `ReactNode` | — | Compose with `Dialog.Title`, `.Description`, `.Body`, `.Footer`. |
+
+### Sub-components
+
+| Component | Notes |
+| --- | --- |
+| `Dialog.Title` | Headline of the dialog. Maps to Radix's `Title` — required for accessibility unless you pass `label`. |
+| `Dialog.Description` | Sub-headline beneath the title. Maps to Radix's `Description`. |
+| `Dialog.Body` | Primary content region. Plain `<div>` with `dialog`-scoped padding. |
+| `Dialog.Footer` | Right-aligned action row. Place `Cancel` / `Confirm` buttons here. |
+
+## Composed: ConfirmDialog
+
+<Lead>A pre-composed confirmation flow built on Dialog + Button + useOptimisticAction. For destructive actions that need an "are you sure" surface.</Lead>
+
+ConfirmDialog ships as a separate registry entry because it composes three
+primitives — `Dialog`, `Button`, and `useOptimisticAction` — into a single
+declarative API. Use it when you need a destructive confirmation flow
+without wiring the composition yourself.
+
+<InstallCommand command="npx sub100 add confirm-dialog" />
+
+Installs as a separate entry. Files land at `components/confirm-dialog.tsx`
+and the CLI pulls in `dialog.tsx`, `button.tsx`, `use-press.ts`,
+`use-motion.ts`, and `springs.ts` if you don't already have them.
+
+### Confirm dialog
+
+The destructive confirm pattern, composed. `onConfirm` is async — the dialog
+closes optimistically the moment the user clicks, the async work runs in the
+background, and `onError` fires if it fails. Wire errors to `toast.error`
+for instant recovery surface.
+
+<ComponentPreview
+  code={
+    <CodeBlock language="tsx">{`"use client";
+
+import { useState } from "react";
+import { Button, ConfirmDialog, toast } from "@sub100/ui";
+
+export function DeleteProjectButton() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button variant="destructive" onPress={() => setOpen(true)}>
+        Delete project
+      </Button>
+      <ConfirmDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Delete this project?"
+        description="This permanently removes the project and its registry entries. This can't be undone."
+        confirmLabel="Delete"
+        variant="destructive"
+        onConfirm={async () => {
+          await fetch("/api/projects/123", { method: "DELETE" });
+          toast("Project deleted", {
+            action: { label: "Undo", onClick: () => toast.success("Restored") },
+          });
+        }}
+        onError={(err) => {
+          toast.error("Couldn't delete", {
+            description: err instanceof Error ? err.message : String(err),
+          });
+        }}
+      />
+    </>
+  );
+}`}</CodeBlock>
+  }
+>
+  <ConfirmDemo />
+</ComponentPreview>
+
+### ConfirmDialog props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | — | Controlled open state. |
+| `onOpenChange` | `(open: boolean) => void` | — | Fires when the dialog opens, closes, or the confirm button is pressed (optimistic close). |
+| `title` | `string` | — | Headline. Renders as `Dialog.Title`. |
+| `description` | `string` | — | Body copy beneath the title. Optional. |
+| `confirmLabel` | `string` | `"Confirm"` | Label on the affirmative button. |
+| `cancelLabel` | `string` | `"Cancel"` | Label on the dismiss button. |
+| `variant` | `"primary"` \| `"destructive"` | `"primary"` | Visual style of the affirmative button. |
+| `onConfirm` | `() => void \| Promise<void>` | — | Fires when the user confirms. Async — dialog closes optimistically, errors route to `onError`. |
+| `onError` | `(err: unknown) => void` | — | Fires when `onConfirm` rejects. Wire to `toast.error` for instant recovery. |

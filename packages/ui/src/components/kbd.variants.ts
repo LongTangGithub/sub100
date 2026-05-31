@@ -12,7 +12,7 @@ export const kbdVariants = tv({
     "rounded-[4px]",
     "border border-neutral-300 dark:border-neutral-700",
     "bg-neutral-50 dark:bg-neutral-800",
-    "text-neutral-500 dark:text-neutral-400",
+    "text-neutral-500 dark:text-neutral-300",
     "shadow-[inset_0_-1px_0_0_rgb(0_0_0/_0.08)] dark:shadow-[inset_0_1px_0_0_rgb(255_255_255/_0.06)]",
     // parent affordance lift
     "transition-transform",
