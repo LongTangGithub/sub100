@@ -1,0 +1,158 @@
+import { Kbd } from "@sub100/ui";
+
+export const frontmatter = {
+  title: "Kbd",
+  description: "Semantic keyboard glyph with a parent-driven affordance lift.",
+};
+
+# Kbd
+
+<Lead>A semantic `<kbd>` element styled to look like a real keycap. Renders shortcuts in CommandMenu rows, on landing-page hints, and anywhere a key needs to look pressable without actually being a button.</Lead>
+
+<InstallCommand command="npx sub100 add kbd" />
+
+Files land at `components/kbd.tsx` and `components/kbd.variants.ts`, plus the
+shared `hooks/use-motion.ts` and `lib/springs.ts` if you don't already have
+them.
+
+## Examples
+
+### Sizes
+
+Two sizes ship: `sm` for inline shortcuts inside dense lists, `md` (default)
+for standalone keys.
+
+<ComponentPreview
+  code={
+    <CodeBlock language="tsx">{`<Kbd size="sm">⌘</Kbd>
+<Kbd size="sm">K</Kbd>
+
+<Kbd>⌘</Kbd>
+<Kbd>K</Kbd>`}</CodeBlock>
+  }
+>
+  <div className="grid grid-cols-2 gap-10 items-center">
+    <div className="flex flex-col items-center gap-2">
+      <span className="flex items-center gap-1">
+        <Kbd size="sm">⌘</Kbd>
+        <Kbd size="sm">K</Kbd>
+      </span>
+      <code className="text-xs text-neutral-500 dark:text-neutral-400 font-mono">
+        sm — h-5 px-1
+      </code>
+    </div>
+    <div className="flex flex-col items-center gap-2">
+      <span className="flex items-center gap-1">
+        <Kbd>⌘</Kbd>
+        <Kbd>K</Kbd>
+      </span>
+      <code className="text-xs text-neutral-500 dark:text-neutral-400 font-mono">
+        md — h-6 px-1.5
+      </code>
+    </div>
+  </div>
+</ComponentPreview>
+
+### Cross-platform shortcut
+
+Pair Kbd with `formatShortcut` to render the same shortcut string as `⌘⇧K` on
+macOS and `Ctrl+Shift+K` everywhere else. The helper splits on `+`, resolves
+each token, and returns an array.
+
+<ComponentPreview
+  code={
+    <CodeBlock language="tsx">{`import { Kbd, formatShortcut } from "@sub100/ui";
+
+export function SaveShortcut() {
+  return (
+    <span className="flex items-center gap-1">
+      {formatShortcut("mod+shift+s").map((key) => (
+        <Kbd key={key} size="sm">{key}</Kbd>
+      ))}
+    </span>
+  );
+}`}</CodeBlock>
+  }
+>
+  <div className="flex flex-col items-center gap-3">
+    <span className="flex items-center gap-1">
+      <Kbd size="sm">⌘</Kbd>
+      <Kbd size="sm">⇧</Kbd>
+      <Kbd size="sm">S</Kbd>
+    </span>
+    <code className="text-xs text-neutral-500 dark:text-neutral-400 font-mono">
+      Linux / Windows: Ctrl Shift S
+    </code>
+  </div>
+</ComponentPreview>
+
+### Parent affordance
+
+Kbd has no hover state of its own. When its parent gains `:hover` or
+`:focus-visible`, every Kbd inside lifts one pixel. Wrap the keycap (or the
+whole row) in `group` and the affordance is automatic.
+
+<ComponentPreview
+  code={
+    <CodeBlock language="tsx">{`<button
+  className="group flex items-center justify-between gap-3
+             px-3 py-2 rounded-lg hover:bg-neutral-100"
+>
+  <span>Search</span>
+  <span className="flex items-center gap-1">
+    <Kbd size="sm">⌘</Kbd>
+    <Kbd size="sm">K</Kbd>
+  </span>
+</button>`}</CodeBlock>
+  }
+>
+  <button
+    type="button"
+    className="group flex items-center justify-between gap-3 w-64 px-3 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
+  >
+    <span className="text-sm text-neutral-700 dark:text-neutral-300">
+      Search
+    </span>
+    <span className="flex items-center gap-1">
+      <Kbd size="sm">⌘</Kbd>
+      <Kbd size="sm">K</Kbd>
+    </span>
+  </button>
+</ComponentPreview>
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `"sm"` \| `"md"` | `"md"` | Keycap height and font size. |
+| `children` | `ReactNode` | — | Glyph or label rendered inside the keycap. |
+| `className` | `string` | — | Merged into the variant classes via `tailwind-variants`. |
+| `...props` | `HTMLAttributes<HTMLElement>` | — | Forwarded to the underlying `<kbd>` element. |
+
+`formatShortcut(shortcut: string)` returns `string[]`. Pass each token to its
+own Kbd so the gap between keys stays consistent.
+
+## Why
+
+### Parent affordance, not own hover
+
+A keycap that lights up on its own hover invites the user to click it. Kbd
+isn't clickable — it's a glyph that describes a shortcut. Hover state belongs
+to the row, the menu item, the button. The lift is small (one pixel,
+`press`-duration transition) so the row reads as the press surface and the key
+reads as part of the row.
+
+### No `will-change-transform`
+
+CommandMenu often renders twenty or more Kbd at once. Promoting each keycap to
+its own GPU layer permanently — for an occasional one-pixel hover — would be
+wasteful. The variants omit `will-change`; the browser allocates the layer
+on-demand when the transition starts. If we see jank in practice, the fix is
+scoped (`group-hover:[will-change:transform]`), not global.
+
+### Two sizes, not three
+
+`sm` fits inside dense list rows; `md` works in headings and hints. A `lg`
+keycap would be a different design pattern — a single highlighted shortcut on
+an empty-state hero, for example — and that's a one-off composition, not a
+size variant.

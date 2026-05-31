@@ -11,7 +11,7 @@ export const commandMenuVariants = tv({
     ],
     content: [
       "fixed top-[20vh] left-1/2 -translate-x-1/2",
-      "w-full max-w-lg",
+      "w-full max-w-[560px]",
       "bg-white dark:bg-neutral-900",
       "border border-neutral-200 dark:border-neutral-800",
       "rounded-xl shadow-2xl",
@@ -30,6 +30,7 @@ export const commandMenuVariants = tv({
     empty: ["py-8 text-center text-sm text-neutral-500"],
     group: [
       "mb-1 last:mb-0",
+      "[&:not(:first-child)]:mt-2",
       "[&_[cmdk-group-heading]]:px-3",
       "[&_[cmdk-group-heading]]:pt-2",
       "[&_[cmdk-group-heading]]:pb-1",
@@ -41,7 +42,7 @@ export const commandMenuVariants = tv({
     ],
     item: [
       // layout
-      "group flex items-center justify-between gap-2 px-3 py-2 rounded-md",
+      "group flex items-center justify-between gap-2 px-3 py-2.5 rounded-md",
       // typography
       "text-sm text-neutral-700 dark:text-neutral-300",
       // interaction

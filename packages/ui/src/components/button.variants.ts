@@ -10,7 +10,8 @@ export const buttonVariants = tv({
   ],
   variants: {
     variant: {
-      default: "bg-neutral-100 text-neutral-900 hover:bg-neutral-200",
+      default:
+        "bg-neutral-100 text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700",
       primary:
         "bg-neutral-900 text-white hover:bg-neutral-700 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200",
       ghost:

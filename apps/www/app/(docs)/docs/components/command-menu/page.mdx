@@ -1,0 +1,137 @@
+import { BasicDemo, GroupedDemo } from "@/components/command-menu-demos";
+
+export const frontmatter = {
+  title: "CommandMenu",
+  description:
+    "Keyboard-first command palette on cmdk + Radix Dialog. Declarative JSX API, focus-trapped, ⌘K to open.",
+};
+
+# CommandMenu
+
+<Lead>A keyboard-first command palette built on cmdk + Radix Dialog. Declarative JSX API, focus-trapped, `⌘K` to open.</Lead>
+
+CommandMenu is a compound component: `CommandMenu` wraps a Radix Dialog,
+`CommandMenu.Input` is the search field, and `CommandMenu.Group` +
+`CommandMenu.Item` build the searchable list. State is controlled — pass
+`open` and `onOpenChange`. To open via keyboard, wire a `useEffect` listener
+for `⌘K` in the parent.
+
+<InstallCommand command="npx sub100 add command-menu" />
+
+Files land at `components/command-menu.tsx` and
+`components/command-menu.variants.ts`.
+
+CommandMenu pulls in `components/kbd.tsx`, `hooks/use-motion.ts`,
+`lib/springs.ts`, and `lib/format-shortcut.ts` transitively — the CLI
+fetches the full tree automatically.
+
+## Examples
+
+### Basic command menu
+
+One group, four items. The Preview opens via the button; in your app, wire a
+`useEffect` to `⌘K` (shown in the code, commented out below to avoid
+conflicting with the docs site's global `⌘K`).
+
+<ComponentPreview
+  code={
+    <CodeBlock language="tsx">{`"use client";
+
+import { useEffect, useState } from "react";
+import { CommandMenu } from "@sub100/ui";
+
+export function AppCommandMenu() {
+  const [open, setOpen] = useState(false);
+
+  // In your app — disabled here to avoid conflicting with the docs site's global ⌘K.
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((prev) => !prev);
+      }
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  return (
+    <CommandMenu open={open} onOpenChange={setOpen}>
+      <CommandMenu.Input placeholder="Type a command…" />
+      <CommandMenu.List>
+        <CommandMenu.Empty>No results.</CommandMenu.Empty>
+        <CommandMenu.Group heading="Suggestions">
+          <CommandMenu.Item onSelect={() => console.log("calendar")}>
+            Calendar
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => console.log("emoji")}>
+            Search emoji
+          </CommandMenu.Item>
+          <CommandMenu.Item onSelect={() => console.log("calc")}>
+            Calculator
+          </CommandMenu.Item>
+        </CommandMenu.Group>
+      </CommandMenu.List>
+    </CommandMenu>
+  );
+}`}</CodeBlock>
+  }
+>
+  <BasicDemo />
+</ComponentPreview>
+
+### Grouped commands
+
+Group items by category with `CommandMenu.Group`. cmdk filters across groups
+when the user types, so heading boundaries are visual only.
+
+<ComponentPreview
+  code={
+    <CodeBlock language="tsx">{`<CommandMenu open={open} onOpenChange={setOpen}>
+  <CommandMenu.Input placeholder="Search commands…" />
+  <CommandMenu.List>
+    <CommandMenu.Empty>No results.</CommandMenu.Empty>
+
+    <CommandMenu.Group heading="Suggestions">
+      <CommandMenu.Item onSelect={() => pick("Profile")}>Profile</CommandMenu.Item>
+      <CommandMenu.Item onSelect={() => pick("Inbox")}>Inbox</CommandMenu.Item>
+    </CommandMenu.Group>
+
+    <CommandMenu.Group heading="Actions">
+      <CommandMenu.Item onSelect={() => pick("New project")}>New project</CommandMenu.Item>
+      <CommandMenu.Item onSelect={() => pick("Invite teammate")}>Invite teammate</CommandMenu.Item>
+      <CommandMenu.Item onSelect={() => pick("Archive")}>Archive</CommandMenu.Item>
+    </CommandMenu.Group>
+
+    <CommandMenu.Group heading="Settings">
+      <CommandMenu.Item onSelect={() => pick("Theme")}>Theme</CommandMenu.Item>
+      <CommandMenu.Item onSelect={() => pick("Keyboard shortcuts")}>Keyboard shortcuts</CommandMenu.Item>
+    </CommandMenu.Group>
+  </CommandMenu.List>
+</CommandMenu>`}</CodeBlock>
+  }
+>
+  <GroupedDemo />
+</ComponentPreview>
+
+## Props
+
+### Root — `CommandMenu`
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | — | Controlled open state. |
+| `onOpenChange` | `(open: boolean) => void` | — | Fires when the menu opens or closes (Esc, outside click, or item select with `closeOnSelect`). |
+| `label` | `string` | `"Command menu"` | `aria-label` on the dialog content. |
+| `children` | `ReactNode` | — | Compose with `CommandMenu.Input`, `.List`, `.Group`, `.Item`, etc. |
+
+### Sub-components
+
+| Component | Key props | Description |
+| --- | --- | --- |
+| `CommandMenu.Input` | `placeholder`, `value`, `onValueChange` | Search field. cmdk filters items as the user types. |
+| `CommandMenu.List` | `children` | Scrollable container for groups and items. |
+| `CommandMenu.Empty` | `children` | Rendered when the filter matches nothing. |
+| `CommandMenu.Group` | `heading` | Labeled section. Visual only — cmdk filters across all groups. |
+| `CommandMenu.Item` | `onSelect`, `closeOnSelect`, `value`, `disabled` | Selectable row. Auto-closes the menu when `closeOnSelect` is true (default). |
+| `CommandMenu.Shortcut` | `shortcut` | Renders a `Kbd` chord (e.g. `"mod+k"`) inside an item. |

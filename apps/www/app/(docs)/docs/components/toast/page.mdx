@@ -1,0 +1,139 @@
+import {
+  PromiseDemo,
+  UndoDemo,
+  VariantsDemo,
+} from "@/components/toast-demos";
+
+export const frontmatter = {
+  title: "Toast",
+  description:
+    "Imperative toast API built on Sonner. Call toast.success() from anywhere — no JSX, no portal wiring, no manual state.",
+};
+
+# Toast
+
+<Lead>An imperative toast API built on Sonner. Call `toast.success("Saved")` from anywhere — no JSX, no portal wiring, no manual state.</Lead>
+
+Toast wraps Sonner 2.0.7 with sub100's tokens and bottom-center positioning.
+Import `toast` from `@sub100/ui` and call it imperatively — `toast.success()`,
+`toast.error()`, `toast.info()`, `toast.warning()`, or plain `toast()` for a
+neutral surface. Pass `description`, `action`, or `duration` for richer
+surfaces.
+
+<InstallCommand command="npx sub100 add toast" />
+
+Files land at `components/toaster.tsx` and `styles/toast-overrides.css`.
+`toast` itself re-exports from Sonner, so consumers import everything from
+`@sub100/ui`.
+
+## Setup
+
+Mount the `Toaster` once at your app root. After that, call `toast.*` from
+anywhere.
+
+```tsx
+// app/layout.tsx
+import { Toaster } from "@sub100/ui";
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>
+        {children}
+        <Toaster />
+      </body>
+    </html>
+  );
+}
+```
+
+No live preview for setup — copy-paste recipe.
+
+## Examples
+
+### Variants
+
+Four built-in surfaces map to the most common needs: confirmation, failure,
+neutral info, and soft warning.
+
+<ComponentPreview
+  code={
+    <CodeBlock language="tsx">{`<Button onPress={() => toast.success("Saved")}>Success</Button>
+<Button onPress={() => toast.error("Couldn't save")}>Error</Button>
+<Button onPress={() => toast.info("Heads up")}>Info</Button>
+<Button onPress={() => toast.warning("Check before continuing")}>Warning</Button>`}</CodeBlock>
+  }
+>
+  <VariantsDemo />
+</ComponentPreview>
+
+### With an Undo action
+
+Destructive completion uses a neutral surface plus an Undo action — not a
+success-green confirmation. The Undo button gives the user a moment to
+reverse before the action commits server-side.
+
+<ComponentPreview
+  code={
+    <CodeBlock language="tsx">{`<Button
+  variant="destructive"
+  onPress={() => {
+    toast("Archived", {
+      action: {
+        label: "Undo",
+        onClick: () => toast.success("Restored"),
+      },
+    });
+  }}
+>
+  Archive project
+</Button>`}</CodeBlock>
+  }
+>
+  <UndoDemo />
+</ComponentPreview>
+
+### Promise tracking
+
+`toast.promise()` flips automatically through loading → success or error.
+Single API call covers the full lifecycle.
+
+<ComponentPreview
+  code={
+    <CodeBlock language="tsx">{`<Button
+  variant="primary"
+  onPress={() => {
+    toast.promise(sync(), {
+      loading: "Syncing…",
+      success: "Synced",
+      error: "Couldn't sync",
+    });
+  }}
+>
+  Sync
+</Button>`}</CodeBlock>
+  }
+>
+  <PromiseDemo />
+</ComponentPreview>
+
+## Props
+
+### `<Toaster />` mount props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `position` | `"top-left"` \| `"top-center"` \| `"top-right"` \| `"bottom-left"` \| `"bottom-center"` \| `"bottom-right"` | `"bottom-center"` | Screen anchor for the toast stack. |
+| `richColors` | `boolean` | `true` | Enables the `success` / `error` / `info` / `warning` variant surfaces. |
+| `closeButton` | `boolean` | `false` | Shows a `×` button on each toast. |
+| `duration` | `number` | `4000` | Default visible duration in ms. |
+| `theme` | `"light"` \| `"dark"` \| `"system"` | `"system"` | Color scheme. sub100 wires this to your existing dark-mode signal. |
+
+### `toast()` call options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `description` | `string \| ReactNode` | — | Secondary line below the message. |
+| `action` | `{ label: string, onClick: () => void }` | — | Single action button. Used for Undo and similar reversibility. |
+| `duration` | `number` | `4000` | Override the `Toaster` default for this toast. |
+| `id` | `string \| number` | auto | Pass an ID to dedupe — calling `toast()` again with the same ID updates the existing toast instead of stacking. |
